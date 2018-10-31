@@ -31,6 +31,10 @@ def run_esp_deploy(lang, service, workdir):
 
 
 def gen_stubs_and_deploy(service: str, lang: str, workdir: str, gcloud_project: str, gcloud_prefix: str):
+    """
+    Генерация исходного кода классов-заглушек в коде проекта, генерация esp конфигурации и деплой в google cloud endpoints
+    """
+
     exec_cmd("""
     docker run --rm \
         --volumes-from gcloud-config \

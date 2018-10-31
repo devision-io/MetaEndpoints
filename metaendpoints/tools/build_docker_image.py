@@ -83,7 +83,7 @@ def build_and_push(docker_repo: str, service_docker_tag: str, workdir: str, dock
 
 def main():
     """
-    Билд и деплой docker image
+    Билд и деплой docker image GRPC сервиса
     """
     parser = argparse.ArgumentParser()
     parser.add_argument('--service', help='Name of API Service. Example: hello', type=str, required=True)

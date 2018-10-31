@@ -29,6 +29,9 @@ def main():
 
 
 def run_serve(grpc_service, backend_port=50051, frontend_http_port=8083, frontend_grpc_port=8084):
+    """
+    Запуск nginx esp для проксирования и транскодирования http -> grpc
+    """
     gcloud_params = read_developer_settings().get('gcloudDev')
     if not gcloud_params:
         raise ValueError("gcloudDev не установлены в developer_settings")
