@@ -1,46 +1,29 @@
-import json
-import base64
-from typing import List
+from concurrent import futures
+import time
+import grpc
+from grpc_health.v1.health import HealthServicer
+from grpc_health.v1 import health_pb2, health_pb2_grpc
 
-PERMISSION_DENIED_STATUS_CODE = 7
+_ONE_DAY_IN_SECONDS = 60 * 60 * 24
 
 
-class Api(object):
-    """
-    Функция декоратор для проверки скоупов на методах сервера
+def serve(register_servicers_callback, port: int = 50051, grace_period: int = 5):
+    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
+    server.add_insecure_port('[::]:{}'.format(port))
 
-    - Проверяет наличие ОДНОГО ИЗ scopes метода в scopes токена
-    - Устанавливает user_id в context сервера
-    """
+    # Регистрируем api сервисы
+    register_servicers_callback(server)
 
-    def __init__(self, scopes: List[str]):
-        """
-        :param scopes: str[] Scope Names
-        """
-        self.scopes = scopes
+    health = HealthServicer()
+    health.set("plugin", health_pb2.HealthCheckResponse.ServingStatus.Value('SERVING'))
+    health_pb2_grpc.add_HealthServicer_to_server(health, server)
 
-    def __call__(self, original_func):
-        decorator_self = self
+    server.start()
 
-        def wrappee(*args, **kwargs):
-            context = args[2]
+    print("Server started...")
 
-            context.user_id = None
-            user_info = None
-            imd = context.invocation_metadata()
-            for md in imd:
-                if md.key == 'x-endpoint-api-userinfo':
-                    user_info = json.loads(base64.b64decode(md.value))
-
-            if user_info:
-                claims = json.loads(user_info.get("claims", {}))
-                user_id = user_info.get("id")
-                context.user_id = user_id
-                token_scopes = claims.get("scope").split(' ')
-                if not any((True for x in token_scopes if x in decorator_self.scopes)):
-                    err_msg = 'Token expected any of scopes for this method: [' + ', '.join(decorator_self.scopes) + "]"
-                    context.abort(PERMISSION_DENIED_STATUS_CODE, err_msg)
-
-            return original_func(*args, **kwargs)
-
-        return wrappee
+    try:
+        while True:
+            time.sleep(_ONE_DAY_IN_SECONDS)
+    except KeyboardInterrupt:
+        server.stop(grace_period)
