@@ -1,0 +1,7 @@
+# Нужно для работы GRPC сервера
+grpcio==1.14.1
+gcloud==0.18.3
+google-api-python-client==1.7.3
+grpcio_health_checking==1.16.0
+docker==2.5.1
+metasdk==0.0.24
