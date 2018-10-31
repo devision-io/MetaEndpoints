@@ -7,12 +7,13 @@ from grpc_health.v1 import health_pb2, health_pb2_grpc
 _ONE_DAY_IN_SECONDS = 60 * 60 * 24
 
 
-def serve(register_servicers_callback, port: int = 50051, grace_period: int = 5):
+def serve(register_servicers_callbacks = [], port: int = 50051, grace_period: int = 5):
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     server.add_insecure_port('[::]:{}'.format(port))
 
     # Регистрируем api сервисы
-    register_servicers_callback(server)
+    for callback_ in register_servicers_callbacks:
+        callback_(server)
 
     health = HealthServicer()
     health.set("plugin", health_pb2.HealthCheckResponse.ServingStatus.Value('SERVING'))
