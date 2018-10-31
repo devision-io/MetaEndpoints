@@ -1,0 +1,16 @@
+public
+/.idea/*
+/.tmp/*
+/build/*
+/node_modules/*
+.vagrant
+target
+*.iml
+out
+.sass-cache
+node_modules
+./gradle/wrapper/gradle-wrapper.properties
+
+!/.idea/runConfigurations/
+
+gradlew.bat

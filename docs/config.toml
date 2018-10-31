@@ -1,0 +1,21 @@
+theme = "devision-docs"
+
+canonifyURLs = true
+
+languageCode = "ru-ru"
+DefaultContentLanguage = "ru"
+
+title = "Endpoints | Devision Developers"
+
+[params]
+projectName = "Endpoints"
+projectLogoUrl = "https://storage.googleapis.com/devision_docs/apiproxy/avatar.png"
+
+noHomeIcon = false # default is false
+noSearch = false # default is false
+showVisitedLinks = true # default is false
+ordersectionsby = "weight"
+
+[outputs]
+home = [ "HTML", "RSS", "JSON"]
+
