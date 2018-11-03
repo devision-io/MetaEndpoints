@@ -1,4 +1,4 @@
-from metasdk.tools import exec_cmd
+from metaendpoints.tools import exec_cmd
 
 
 def run_esp_init():

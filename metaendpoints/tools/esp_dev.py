@@ -3,7 +3,7 @@ from os.path import expanduser
 
 from metasdk import read_developer_settings
 from metasdk.internal import OS_NAME
-from metasdk.tools import exec_cmd
+from metaendpoints.tools import exec_cmd
 
 
 def main():
@@ -14,9 +14,13 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--service', help='Name of API Service. Example: hello', type=str, required=True)
     parser.add_argument('--backend_port', help='Backend grpc app port. Default: 50051', type=int, required=False, default=50051)
-    parser.add_argument('--frontend_http_port', help='ESP Frontend port for HTTP(REST) requests. Default: 8083', type=int, required=False, default=8083)
-    parser.add_argument('--frontend_grpc_port', help='ESP Frontend port for GRPC request. Default: 8084', type=int, required=False, default=8084)
-    parser.add_argument('--service_account_key_file', help='Service account json file for trace and log google cloud api. Default: test-esp-service-account-creds.json', type=str,
+    parser.add_argument('--frontend_http_port', help='ESP Frontend port for HTTP(REST) requests. Default: 8083', type=int, required=False,
+                        default=8083)
+    parser.add_argument('--frontend_grpc_port', help='ESP Frontend port for GRPC request. Default: 8084', type=int, required=False,
+                        default=8084)
+    parser.add_argument('--service_account_key_file',
+                        help='Service account json file for trace and log google cloud api. Default: test-esp-service-account-creds.json',
+                        type=str,
                         required=False, default="test-esp-service-account-creds.json")
     args = parser.parse_args()
 

@@ -1,7 +1,8 @@
 import argparse
 
 from metasdk import read_developer_settings
-from metasdk.tools import exec_cmd
+
+from metaendpoints.tools import exec_cmd
 
 
 def main():
