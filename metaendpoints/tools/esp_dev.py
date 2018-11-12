@@ -3,7 +3,7 @@ from os.path import expanduser
 
 from metasdk import read_developer_settings
 from metasdk.internal import OS_NAME
-from metasdk.tools import exec_cmd
+from metaendpoints.tools import exec_cmd
 
 
 def main():
