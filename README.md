@@ -1,6 +1,6 @@
 # Meta Endpoints
 
-Сборка и запуск api на основе GRPC + Google Cloud Endpoint
+Сборка и запуск api на основе gRPC + Google Cloud Endpoint
 
 # Области применения
 

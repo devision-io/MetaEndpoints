@@ -1,4 +1,4 @@
-# Нужно для работы GRPC сервера
+# Нужно для работы gRPC сервера
 grpcio==1.14.1
 gcloud==0.18.3
 google-api-python-client==1.7.3

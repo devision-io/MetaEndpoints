@@ -9,14 +9,14 @@ from metaendpoints.tools import exec_cmd
 def main():
     """
     Запускает локальный Docker контейнер с google cloud esp
-    Это нужно для транскодирования REST запросов на ваш GRPC backend, а так же проверки авторизации
+    Это нужно для транскодирования REST запросов на ваш gRPC backend, а так же проверки авторизации
     """
     parser = argparse.ArgumentParser()
     parser.add_argument('--service', help='Name of API Service. Example: hello', type=str, required=True)
     parser.add_argument('--backend_port', help='Backend grpc app port. Default: 50051', type=int, required=False, default=50051)
     parser.add_argument('--frontend_http_port', help='ESP Frontend port for HTTP(REST) requests. Default: 8083', type=int, required=False,
                         default=8083)
-    parser.add_argument('--frontend_grpc_port', help='ESP Frontend port for GRPC request. Default: 8084', type=int, required=False,
+    parser.add_argument('--frontend_grpc_port', help='ESP Frontend port for gRPC request. Default: 8084', type=int, required=False,
                         default=8084)
     parser.add_argument('--service_account_key_file',
                         help='Service account json file for trace and log google cloud api. Default: test-esp-service-account-creds.json',

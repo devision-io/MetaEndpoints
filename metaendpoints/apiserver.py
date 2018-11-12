@@ -9,7 +9,7 @@ _ONE_DAY_IN_SECONDS = 60 * 60 * 24
 
 def serve(register_servicers_callbacks=None, port: int = 50051, grace_period: int = 10):
     """
-    Старт GRPC сервера
+    Старт gRPC сервера
 
     :param register_servicers_callbacks: Список колбеков для регистрации сервисов апи в grpc сервере
     :param port: grpc порт. Менять не желательно
