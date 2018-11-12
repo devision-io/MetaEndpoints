@@ -7,7 +7,7 @@ title = "С чего начать"
 Если у вас уже есть проект, то пропускайпе этот подраздел.
 
 
-Установите [cookiecutter]()https://cookiecutter.readthedocs.io/en/latest/installation.html)
+Установите [cookiecutter](https://cookiecutter.readthedocs.io/en/latest/installation.html)
 
 ```bash
 cookiecutter https://github.com/devision-io/devision-apis-skeleton.git
