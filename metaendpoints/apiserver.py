@@ -27,7 +27,7 @@ def serve(register_servicers_callbacks=None, port: int = 50051, grace_period: in
         callback_(server)
 
     health = HealthServicer()
-    health.set("plugin", health_pb2.HealthCheckResponse.ServingStatus.Value('SERVING'))
+    health.set("health", health_pb2.HealthCheckResponse.ServingStatus.Value('SERVING'))
     health_pb2_grpc.add_HealthServicer_to_server(health, server)
 
     server.start()
