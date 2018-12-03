@@ -2,6 +2,7 @@ import argparse
 
 from metasdk import read_developer_settings
 from metaendpoints.tools import exec_cmd
+from metaendpoints.tools.build_api_docs import build_doc
 
 
 def main():
@@ -18,10 +19,13 @@ def main():
     service = args.service
     lang = args.lang
 
+    build_doc(service, workdir)
     run_esp_deploy(lang, service, workdir)
 
 
 def run_esp_deploy(lang, service, workdir):
+    print("Code generation and deploy ESP config...")
+
     gcloud_params = read_developer_settings().get('gcloudDev')
     if not gcloud_params:
         raise ValueError("gcloudDev не установлены в developer_settings")
