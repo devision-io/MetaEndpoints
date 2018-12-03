@@ -1,4 +1,4 @@
-__version__ = '0.0.9'
+__version__ = '0.1.0'
 __package_name__ = 'metaendpoints'
 
 if __name__ == "__main__":
