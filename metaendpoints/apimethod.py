@@ -37,6 +37,8 @@ class Api(object):
                 user_id = user_info.get("id")
                 context.user_id = user_id
                 token_scopes = claims.get("scope").split(' ')
+                context.token_scopes = token_scopes
+                context.is_dev = 'meta.dev' in token_scopes
                 if not any((True for x in token_scopes if x in decorator_self.scopes)):
                     err_msg = 'Token expected any of scopes for this method: [' + ', '.join(decorator_self.scopes) + "]"
                     context.abort(PERMISSION_DENIED_STATUS_CODE, err_msg)
