@@ -6,6 +6,7 @@ import subprocess
 
 
 def exec_cmd(cmd, check=True):
+    print("Run command = %s" % str(cmd))
     subprocess.run(cmd, shell=True, check=check)
 
 
@@ -59,8 +60,25 @@ def gen_stubs(args):
                 proto_file_path=proto_file_path,
                 gen_dir=gen_dir
             ))
+        elif args.lang == 'go':
+            gen_dir = workdir + "/proto/"
+            if not os.path.exists(gen_dir):
+                os.makedirs(gen_dir)
+
+            exec_cmd("""
+                    python3 -m grpc.tools.protoc \
+                        --proto_path={proto_path} \
+                        --proto_path=/api-common-protos \
+                        --go_out=plugins=grpc:{gen_dir} \
+                        {proto_file_path}
+                """.format(
+                api_version=api_version,
+                proto_path=proto_path,
+                proto_file_path=proto_file_path,
+                gen_dir=gen_dir
+            ))
         else:
-            raise ValueError("Not supported command argument: language ")
+            raise ValueError("Not supported command argument: language")
     return service_protos
 
 
