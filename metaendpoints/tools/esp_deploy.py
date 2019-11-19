@@ -1,4 +1,7 @@
 import argparse
+import hashlib
+from os import scandir
+from os.path import join
 
 from metasdk import read_developer_settings
 from metaendpoints.tools import exec_cmd
@@ -21,6 +24,28 @@ def main():
 
     build_doc(service, workdir)
     run_esp_deploy(lang, service, workdir)
+
+
+def md5_file(service, workdir):
+    api_workdir = join(workdir, "api")
+    proto_path = join(api_workdir, "proto")
+
+    versions = []
+    for entry in scandir(proto_path):
+        versions.append(entry.name)
+
+    for version in versions:
+        version_dir = join(proto_path, version)
+        input_file_name = join(version_dir, service + ".proto")
+        md5_file_name = join(version_dir, service + "_md5")
+
+        hash_md5 = hashlib.md5()
+        with open(input_file_name, "rb") as f:
+            for chunk in iter(lambda: f.read(4096), b""):
+                hash_md5.update(chunk)
+
+        with open(md5_file_name, "x") as f:
+            f.write(hash_md5.hexdigest())
 
 
 def run_esp_deploy(lang, service, workdir):
@@ -56,6 +81,8 @@ def gen_stubs_and_deploy(service: str, lang: str, workdir: str, gcloud_project: 
         gcloud_project=gcloud_project,
         gcloud_prefix=gcloud_prefix
     ))
+
+    md5_file(service, workdir)
 
 
 if __name__ == '__main__':
