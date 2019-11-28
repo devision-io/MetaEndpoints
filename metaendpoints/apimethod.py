@@ -26,6 +26,7 @@ class Api(object):
             context = args[2]
 
             context.user_id = None
+            context.metadata = {}
             user_info = None
             imd = context.invocation_metadata()
             for md in imd:
@@ -34,11 +35,10 @@ class Api(object):
 
             if user_info:
                 claims = json.loads(user_info.get("claims", {}))
-                user_id = user_info.get("id")
-                context.user_id = user_id
-                token_scopes = claims.get("scope").split(' ')
-                context.token_scopes = token_scopes
+                token_scopes = claims.get("scope").split(' ')  # Эти данные не нужны в самом сервисе, так как не должы определять бизнеслогику.
                 context.is_dev = 'meta.dev' in token_scopes
+                context.user_id = user_info.get("id")
+                context.metadata.update({"user_id": context.user_id, "is_dev": context.is_dev})
                 if not any((True for x in token_scopes if x in decorator_self.scopes)):
                     err_msg = 'Token expected any of scopes for this method: [' + ', '.join(decorator_self.scopes) + "]"
                     context.abort(PERMISSION_DENIED_STATUS_CODE, err_msg)

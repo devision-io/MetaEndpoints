@@ -44,7 +44,7 @@ def md5_file(service, workdir):
             for chunk in iter(lambda: f.read(4096), b""):
                 hash_md5.update(chunk)
 
-        with open(md5_file_name, "x") as f:
+        with open(md5_file_name, "w") as f:
             f.write(hash_md5.hexdigest())
 
 

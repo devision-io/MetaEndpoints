@@ -3,7 +3,7 @@ import subprocess
 
 
 def exec_cmd(cmd, check=True):
-    print("Rin cmd:")
+    print("Ran cmd:")
     print(cmd)
     subprocess.run(cmd, shell=True, check=check)
 
