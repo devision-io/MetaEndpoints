@@ -26,9 +26,15 @@ class Api(object):
             context = args[2]
 
             context.user_id = None
-            context.metadata = {}
+            context.is_dev = None
             user_info = None
             imd = context.invocation_metadata()
+            context.metadata = {}
+
+            # Копируем весь imd в виде словаря, это нужно для совместимости с библиотекой grpc-testing
+            for metadatum_object in imd:
+                context.metadata.update({metadatum_object.key: metadatum_object.value})
+
             for md in imd:
                 if md.key == 'x-endpoint-api-userinfo':
                     user_info = json.loads(base64.b64decode(md.value))
