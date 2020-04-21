@@ -2,7 +2,12 @@ import json
 import base64
 from typing import List
 
+from metasdk import Logger
+
 PERMISSION_DENIED_STATUS_CODE = 7
+INTERNAL_ERROR_STATUS_CODE = 13
+
+meta_log = Logger()
 
 
 class Api(object):
@@ -23,6 +28,7 @@ class Api(object):
         decorator_self = self
 
         def wrappee(*args, **kwargs):
+            request = args[1]
             context = args[2]
 
             context.user_id = None
@@ -48,7 +54,32 @@ class Api(object):
                 if not any((True for x in token_scopes if x in decorator_self.scopes)):
                     err_msg = 'Token expected any of scopes for this method: [' + ', '.join(decorator_self.scopes) + "]"
                     context.abort(PERMISSION_DENIED_STATUS_CODE, err_msg)
+            try:
+                return original_func(*args, **kwargs)
+            except Exception as e:
+                try:
+                    if context._state and context._state.aborted:
+                        err_request_ = ""
 
-            return original_func(*args, **kwargs)
+                        if request:
+                            err_request_ = str(request)
+
+                        err_code_ = str(context._state.code)
+                        err_details_ = str(context._state.details.decode('utf-8'))
+
+                        err_msg = "Abort request. Code: " + err_code_ + ". Details: " + err_details_
+                        err_ctx = {
+                            "request": err_request_,
+                            "user": str(context.user_id)
+                        }
+                        if err_code_ == 'StatusCode.INTERNAL':
+                            meta_log.error(err_msg, err_ctx)
+                        else:
+                            meta_log.warning(err_msg, err_ctx)
+                except Exception as e:
+                    meta_log.error("Unable to log grpc abort error", {
+                        "e": e
+                    })
+                raise e
 
         return wrappee
