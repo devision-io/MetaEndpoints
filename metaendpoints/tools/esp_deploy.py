@@ -1,9 +1,12 @@
+import os
 import argparse
 import hashlib
 from os import scandir
 from os.path import join
 
 from metasdk import read_developer_settings
+from metasdk.internal import OS_NAME
+
 from metaendpoints.tools import exec_cmd
 from metaendpoints.tools.build_api_docs import build_doc
 
@@ -64,18 +67,32 @@ def gen_stubs_and_deploy(service: str, lang: str, workdir: str, gcloud_project: 
     Генерация исходного кода классов-заглушек в коде проекта, генерация esp конфигурации и деплой в google cloud endpoints
     """
 
+    docker_user = ""
+    if OS_NAME == "linux":
+        # чтобы файлы не создавались из под рута
+        docker_user = "--user " + str(os.getuid()) + ":" + str(os.getgid())
+        build_dir = "/mnt/static"
+    else:
+        # на macos и win очень сложно создать /mnt/static и подмаунтить ее в докер
+        # а на проде linux и на десктопе с этим тоже нет проблем
+        from metasdk.internal import __build_path
+        build_dir = __build_path("/.rwmeta/.espbuild")
+        os.makedirs(build_dir, exist_ok=True)
+
     exec_cmd("""
     docker run --rm \
-        --volumes-from gcloud-config \
+        {docker_user} --volumes-from gcloud-config \
         -v {workdir}:/app_source \
-        -v /mnt/static:/mnt/static \
+        -v {build_dir}:/mnt/static \
         apisgarpun/apiservice-deploy:latest \
         --service={service} \
         --lang={lang} \
         --gcloud_project={gcloud_project} \
         --gcloud_prefix={gcloud_prefix}
     """.format(
+        docker_user=docker_user,
         workdir=workdir,
+        build_dir=build_dir,
         service=service,
         lang=lang,
         gcloud_project=gcloud_project,
