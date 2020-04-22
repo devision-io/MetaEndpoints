@@ -20,8 +20,8 @@ def await_build(build_result, image_tag):
     response = []
     srch = 'Successfully tagged ' + image_tag
     for line in build_result:
-        line_get = line.get('stream', '')
-        print("Docker build: " + line_get.replace("\n", ""))
+        line_get = str(line)
+        print("Docker build: " + str(line))
         response.append(line_get)
 
         match = re.search(srch, line_get)
