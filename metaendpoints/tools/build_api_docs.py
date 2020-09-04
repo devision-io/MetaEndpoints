@@ -92,6 +92,7 @@ def build_doc(service, workdir):
 
             required = []
 
+            new_pros = {}
             for fK, fV in defV.get('properties', {}).items():
                 title = fV.get('title')
                 description = fV.get('description')
@@ -108,15 +109,15 @@ def build_doc(service, workdir):
                     required.append(fK)
                     title = title.replace(REQUIRED_PH, '').strip()
 
-                alternative_name = underscore_to_camelcase(fK)
-                if alternative_name != fK:
-                    title += "\nАльтернативное имя: " + alternative_name
-
                 if not description:
                     fV['description'] = title
                 if 'type' in fV and fV['type'] == 'array' \
                         and fV['items'].get('format') == 'int64':
                     fV['items']['type'] = 'number'
+
+                camel_case_fk = underscore_to_camelcase(fK)
+                new_pros[camel_case_fk] = fV
+            defV['properties'] = new_pros
             defV['required'] = required
         with (open(file, 'w'))as f:
             f.write(json.dumps(swagger))
@@ -177,4 +178,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    build_doc("accountmanagement", "/Users/arturgspb/PycharmProjects/api-accountmanagement")
